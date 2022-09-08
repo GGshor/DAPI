@@ -46,12 +46,64 @@ export type EmbedField = {
 
 local Utils = require(script.Parent.Utils)
 
-local Embed = {}
+local Embed = {type="rich"}
 Embed.__index = Embed
 
 
 function Embed:AddField(name: string, value: string, inline: boolean?)
-	Utils.CheckArgument({"string", "value", "boolean?"}, name, value, inline)
+	Utils.CheckArgumentTypes({"string", "string", "boolean?"}, name, value, inline)
+	Utils.CheckArgumentCharacters({256, 1024}, name, value)
+
+	table.insert(self.fields, {
+		name = name,
+		value = value,
+		inline = inline or false
+	})
+end
+
+function Embed:AppendField(field: EmbedField)
+	table.insert(self.fields, field)
+end
+
+function Embed:InsertFieldAt(index: number, name: string, value: string, inline: boolean?)
+	Utils.CheckArgumentTypes({"number", "string", "string", "boolean?"})
+	Utils.CheckArgumentCharacters({256, 1024}, name, value)
+
+	table.insert(self.fields, index, {
+		name = name,
+		value = value,
+		inline = inline or false
+	})
+end
+
+function Embed:RemoveAuthor()
+	table.clear(self.author)
+end
+
+function Embed:RemoveFooter()
+	table.clear(self.footer)
+end
+
+function Embed:RemoveImage()
+	table.clear(self.image)
+end
+
+function Embed:RemoveThumbnail()
+	table.clear(self.thumbnail)
+end
+
+function Embed:SetAuthor(name: string, url: string?, icon_url: string?)
+	-- TODO: Work further on this
+end
+
+function Embed:ClearFields()
+	table.clear(self.fields)
+end
+
+function Embed:RemoveField(index: number)
+	Utils.CheckArgumentTypes({"number"}, index)
+
+	table.remove(self.fields, index)
 end
 
 function Embed:CountCharacters()
@@ -86,7 +138,13 @@ function Embed:CountCharacters()
 end
 
 function Embed.new()
-	
+	local self = setmetatable({
+		title = "",
+		description = "",
+		fields = {}
+	}, Embed)
+
+	return self
 end
 
 return Embed
