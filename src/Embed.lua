@@ -93,6 +93,7 @@ function Embed:RemoveThumbnail()
 end
 
 function Embed:SetAuthor(name: string, url: string?, icon_url: string?)
+	-- NOTE: For url check with string.find, example: string.find(url, "https", 1) -- Starts at characters  1 of the url
 	-- TODO: Work further on this
 end
 
