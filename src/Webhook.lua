@@ -239,7 +239,7 @@ function Webhook.new(webhookURL: string)
 	local succes, response = pcall(self.Update, self, webhookURL)
 
 	if succes == false then
-		error("Failed to create new webhook, reason: " .. response)
+		error("Failed to create new webhook, \nError message: " .. response)
 	end
 
 	return self
