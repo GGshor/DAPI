@@ -10,6 +10,8 @@ function Utils.CheckArgumentTypes(types: {string}, ...: any)
             error("Expected " .. types[index] .. ", got " .. typeof(argument))
         end
     end
+
+    return true
 end
 
 function Utils.CheckArgumentCharacters(limits: {number}, ...:string)
@@ -18,6 +20,8 @@ function Utils.CheckArgumentCharacters(limits: {number}, ...:string)
         error("Expected " .. tostring(limits[index]) .. "characters or less, got " .. tostring(argument:len()))
        end
     end
+
+    return true
 end
 
 function Utils.CheckUrl(url: string)
