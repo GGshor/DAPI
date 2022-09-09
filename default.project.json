@@ -2,41 +2,55 @@
   "name": "DAPI",
   "tree": {
     "$className": "DataModel",
-
+    "Lighting": {
+      "$properties": {
+        "Brightness": 2.0,
+        "GlobalShadows": true,
+        "Outlines": false,
+        "Ambient": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "Technology": "Voxel"
+      }
+    },
     "ServerStorage": {
       "Server": {
         "$path": "src/server"
       }
-    }
-  },
-
-  "Workspace": {
-    "$properties": {
-      "FilteringEnabled": true
     },
-    "Baseplate": {
-      "$className": "Part",
+    "SoundService": {
       "$properties": {
-        "Anchored": true,
-        "Color": [0.38823, 0.37254, 0.38823],
-        "Locked": true,
-        "Position": [0, -10, 0],
-        "Size": [512, 20, 512]
+        "RespectFilteringEnabled": true
       }
-    }
-  },
-  "Lighting": {
-    "$properties": {
-      "Ambient": [0, 0, 0],
-      "Brightness": 2,
-      "GlobalShadows": true,
-      "Outlines": false,
-      "Technology": "Voxel"
-    }
-  },
-  "SoundService": {
-    "$properties": {
-      "RespectFilteringEnabled": true
+    },
+    "Workspace": {
+      "Baseplate": {
+        "$className": "Part",
+        "$properties": {
+          "Locked": true,
+          "Size": [
+            512.0,
+            20.0,
+            512.0
+          ],
+          "Anchored": true,
+          "Position": [
+            0.0,
+            -10.0,
+            0.0
+          ],
+          "Color": [
+            0.38823,
+            0.37254,
+            0.38823
+          ]
+        }
+      },
+      "$properties": {
+        "FilteringEnabled": true
+      }
     }
   }
 }
