@@ -16,8 +16,8 @@
       }
     },
     "ServerStorage": {
-      "Server": {
-        "$path": "src/server"
+      "DAPI": {
+        "$path": "src"
       }
     },
     "SoundService": {
