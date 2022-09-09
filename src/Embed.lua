@@ -138,14 +138,17 @@ function Embed:CountCharacters()
 	return result.total, result
 end
 
-function Embed.new()
-	local self = setmetatable({
-		title = "",
-		description = "",
-		fields = {}
-	}, Embed)
+function Embed.new(title: string?, description: string?, color: Color3?, url: string?, timestamp: number?, fields: {EmbedField}?)
+	local self = setmetatable({}, Embed)
 
-	return self
+	if Utils.CheckArgumentTypes({"string"}, title) and Utils.CheckArgumentCharacters({256}, title) then
+		self.title = title
+	end
+
+	if Utils.CheckArgumentTypes({"string"}, description) and Utils.CheckArgumentCharacters({1024}, description) then
+		self.description = description
+	end
+	return
 end
 
 return Embed
