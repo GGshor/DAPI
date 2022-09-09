@@ -20,5 +20,13 @@ function Utils.CheckArgumentCharacters(limits: {number}, ...:string)
     end
 end
 
+function Utils.CheckUrl(url: string)
+    if string.find(url, "http", 1) then
+        return true
+    else
+        return false
+    end
+end
+
 
 return Utils
