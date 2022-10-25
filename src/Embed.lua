@@ -6,21 +6,21 @@ export type Embed = {
 	timestamp: string?,
 	color: number?,
 	footer: EmbedFooter?,
-	fields: {EmbedField}?,
-	author: EmbedAuthor?
+	fields: { EmbedField }?,
+	author: EmbedAuthor?,
 }
 
 export type EmbedFooter = {
 	text: string,
 	icon_url: string?,
-	proxy_icon_url: string?
+	proxy_icon_url: string?,
 }
 
 export type EmbedImage = {
 	url: string,
 	proxy_url: string?,
 	height: number?,
-	width: number?
+	width: number?,
 }
 
 export type EmbedThumbnail = EmbedImage
@@ -28,36 +28,35 @@ export type EmbedVideo = EmbedImage
 
 export type EmbedProvider = {
 	name: string?,
-	url: string?
+	url: string?,
 }
 
 export type EmbedAuthor = {
 	name: string,
 	url: string?,
 	icon_url: string?,
-	proxy_icon_url: string?
+	proxy_icon_url: string?,
 }
 
 export type EmbedField = {
 	name: string,
 	value: string,
-	inline: boolean
+	inline: boolean,
 }
 
 local Utils = require(script.Parent.Utils)
 
-local Embed = {type="rich"}
+local Embed = { type = "rich" }
 Embed.__index = Embed
 
-
 function Embed:AddField(name: string, value: string, inline: boolean?)
-	Utils.CheckArgumentTypes({"string", "string", "boolean?"}, name, value, inline)
-	Utils.CheckArgumentCharacters({256, 1024}, name, value)
+	Utils.CheckArgumentTypes({ "string", "string", "boolean?" }, name, value, inline)
+	Utils.CheckArgumentCharacters({ Utils.Limits.Fields.Name, Utils.Limits.Fields.Value }, name, value)
 
 	table.insert(self.fields, {
 		name = name,
 		value = value,
-		inline = inline or false
+		inline = inline or false,
 	})
 end
 
@@ -66,13 +65,13 @@ function Embed:AppendField(field: EmbedField)
 end
 
 function Embed:InsertFieldAt(index: number, name: string, value: string, inline: boolean?)
-	Utils.CheckArgumentTypes({"number", "string", "string", "boolean?"})
-	Utils.CheckArgumentCharacters({256, 1024}, name, value)
+	Utils.CheckArgumentTypes({ "number", "string", "string", "boolean?" })
+	Utils.CheckArgumentCharacters({ Utils.Limits.Fields.Name, Utils.Limits.Fields.Value }, name, value)
 
 	table.insert(self.fields, index, {
 		name = name,
 		value = value,
-		inline = inline or false
+		inline = inline or false,
 	})
 end
 
@@ -93,8 +92,25 @@ function Embed:RemoveThumbnail()
 end
 
 function Embed:SetAuthor(name: string, url: string?, icon_url: string?)
-	-- NOTE: For url check with string.find, example: string.find(url, "https", 1) -- Starts at characters  1 of the url
-	-- TODO: Work further on this
+	Utils.CheckArgumentTypes({ "string" }, name)
+
+	if type(url) ~= "string" then
+		url = nil
+	else
+		Utils.CheckUrl(url)
+	end
+
+	if type(icon_url) ~= "string" then
+		icon_url = nil
+	else
+		Utils.CheckUrl(icon_url)
+	end
+
+	self.author = {
+		name = name,
+		url = url,
+		icon_url = icon_url,
+	}
 end
 
 function Embed:ClearFields()
@@ -102,13 +118,13 @@ function Embed:ClearFields()
 end
 
 function Embed:RemoveField(index: number)
-	Utils.CheckArgumentTypes({"number"}, index)
+	Utils.CheckArgumentTypes({ "number" }, index)
 
 	table.remove(self.fields, index)
 end
 
 function Embed:CountCharacters()
-	local result = {total=0}
+	local result = { total = 0 }
 
 	if self.title then
 		result.title = self.title:len()
@@ -138,17 +154,30 @@ function Embed:CountCharacters()
 	return result.total, result
 end
 
-function Embed.new(title: string?, description: string?, color: Color3?, url: string?, timestamp: number?, fields: {EmbedField}?)
+function Embed.new(
+	title: string?,
+	description: string?,
+	color: Color3?,
+	url: string?,
+	timestamp: number?,
+	fields: { EmbedField }?
+)
 	local self = setmetatable({}, Embed)
 
-	if Utils.CheckArgumentTypes({"string"}, title) and Utils.CheckArgumentCharacters({256}, title) then
+	if
+		Utils.CheckArgumentTypes({ "string" }, title) and Utils.CheckArgumentCharacters({ Utils.Limits.Title }, title)
+	then
 		self.title = title
 	end
 
-	if Utils.CheckArgumentTypes({"string"}, description) and Utils.CheckArgumentCharacters({1024}, description) then
+	if
+		Utils.CheckArgumentTypes({ "string" }, description)
+		and Utils.CheckArgumentCharacters({ Utils.Limits.Description }, description)
+	then
 		self.description = description
 	end
-	return
+
+	return setmetatable({}, Embed)
 end
 
 return Embed
