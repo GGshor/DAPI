@@ -55,4 +55,13 @@ function Utils.CheckUrl(url: string)
 	end
 end
 
+function Utils.RGBtoHex(color: Color3)
+	return string.format("#%02X%02X%02X", color.R * 0xFF, color.G * 0xFF, color.B * 0xFF)
+end
+
+function Utils.HextoRGB(hex: string)
+	local r, g, b = string.match(hex, "^#?(%w%w)(%w%w)(%w%w)$")
+	return Color3.fromRGB(tonumber(r, 16),tonumber(g, 16), tonumber(b, 16))
+end
+
 return Utils
