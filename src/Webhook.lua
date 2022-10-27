@@ -18,7 +18,6 @@ export type WebhookData = {
 	token: string,
 	application_id: number?,
 }
-
 export type ExecuteParams = {
 	content: string?,
 	username: string?,
@@ -32,17 +31,17 @@ export type ExecuteParams = {
 }
 
 --[[
-Handles webhooks object
+Handles webhook object
 
 @class Webhook
---]]
+]]
 local Webhook = {}
 Webhook.__index = Webhook
 
 --[[
 Enforces the rules on given params
 
-@param params ExecuteParams -- The param to enforce rules on
+@param params ExecuteParams -- The parameters to enforce rules on
 ]]
 local function CheckParams(params: ExecuteParams)
 	-- Prevents content and embeds being empty
@@ -51,7 +50,7 @@ local function CheckParams(params: ExecuteParams)
 	end
 
 	if typeof(params.content) == "string" and params.content:len() > 2000 then
-		error("Too many characters in content, limit is up to 2000 characters.")
+		error("Content has " .. tostring(params.content:len()) .. ", limit is up to 2000 characters.")
 	end
 
 	if type(params.embeds) == "table" then
@@ -67,16 +66,23 @@ local function CheckParams(params: ExecuteParams)
 			end
 
 			if embed.title:len() > 256 then
-				warn("[DAPI.Embed]: Title has", embed.title:len(), "characters")
-				error("Embed title has too many characters, limit is up to 256 characters.")
+				error(
+					"Embed title has "
+						.. tostring(embed.title:len())
+						.. " characters, but the limit is up to 256 characters."
+				)
 			end
 			stringCount += embed.title:len()
 
 			if embed.description:len() > 1024 then
-				warn("[DAPI.Embed]: Description has", embed.description:len(), "characters")
-				error("Embed description has too many characters, limit is up to 1024 characters")
+				error(
+					"Embed description has "
+						.. tostring(embed.description:len())
+						.. " characters, but the limit is up to 1024 characters"
+				)
+			else
+				stringCount += embed.description:len()
 			end
-			stringCount += embed.description:len()
 
 			if typeof(embed.fields) == "table" then
 				local countFields = 0
@@ -88,12 +94,20 @@ local function CheckParams(params: ExecuteParams)
 						error("Embed has too many fields, limit is up to 25 fields.")
 					end
 
-					if field.name and field.name:len() > 256 then
-						warn("[DAPI.Embed.Field]: Field name has", field.name:len(), "characters")
-						error("Field name has too many characters, limit is up to 256.")
-					elseif field.value and field.value:len() > 1024 then
-						warn("[DAPI.Embed.Field]: Field value has", field.value:len(), "characters")
-						error("Field value has too many characters, limit is up to 1024 characters.")
+					if field.name:len() > 256 then
+						error(
+							"A field name has "
+								.. tostring(field.name:len())
+								.. " characters, but the limit is up to 256.\nName: "
+								.. field.name
+						)
+					elseif field.value:len() > 1024 then
+						error(
+							"Field value has "
+								.. tostring(field.value:len())
+								.. " characters, but the limit is up to 1024 characters.\nName: "
+								.. field.name
+						)
 					end
 					stringCount += field.name:len()
 					stringCount += field.value:len()
@@ -101,21 +115,31 @@ local function CheckParams(params: ExecuteParams)
 			end
 
 			if embed.footer and embed.footer.text:len() > 2048 then
-				warn("[DAPI.Embed]: Footer has", embed.footer.text:len(), "characters")
-				error("Embed footer text has too many characters, limit is up to 2048 characters.")
+				error(
+					"Embed footer text has "
+						.. tostring(embed.footer.text:len())
+						.. " characters, but the limit is up to 2048 characters."
+				)
+			else
+				stringCount += embed.footer.text:len()
 			end
-			stringCount += embed.footer.text:len()
 
 			if embed.author and embed.author.name:len() > 256 then
-				warn("[DAPI.Embed]: Author name has", embed.author.name:len(), "characters")
-				error("Embed author name has too many characters, limit is up to 256 characters")
+				error(
+					"Embed author name has "
+						.. tostring(embed.author.name:len())
+						.. " characters, limit is up to 256 characters"
+				)
+			else
+				stringCount += embed.author.name:len()
 			end
-			stringCount += embed.author.name:len()
 
 			if stringCount > 6000 then
-				warn("[DAPI.Embed]: Embed has", stringCount, "characters")
 				error(
-					"Embed has too many characters, the sum of title, description, field.name, field.value, footer.text, and author.name is above the limit. The limit is up to 6000"
+					"Embed has "
+						.. tostring(stringCount)
+						.. " characters, the sum of title, description, field.name, field.value, footer.text, and author.name"
+						.. "is above the limit. The limit is up to 6000"
 				)
 			end
 		end
@@ -137,7 +161,8 @@ function Webhook:Update(url: string)
 	local gotResponse, response = pcall(HttpService.GetAsync, HttpService, url)
 	if gotResponse == false then
 		error(
-			"Failed to get webhook information from url, are you sure that you have turned on http requests?\nError message from url: "
+			"Failed to get webhook information from url, are you sure that you have turned on http requests?"
+				.. "\nError message from url: "
 				.. response
 		)
 	end
@@ -173,12 +198,13 @@ Executes the webhook with given params
 ]]
 function Webhook:Execute(params: ExecuteParams, override: boolean?)
 	if override == true then
-		warn("[DAPI]: Executing webhook with override true, this may lead to errors.")
+		warn("[DAPI]: Executing webhook with override true, this may lead to the webhook not executing correctly.")
 
 		local success, encoded = pcall(HttpService.JSONEncode, HttpService, params)
 		if success == false then
 			error(
-				"Failed to encode params, are you sure that your table only has string and numbers?\nError message: "
+				"Failed to encode params, are you sure that your table only has string and numbers?"
+					.. "\nError message: "
 					.. encoded
 			)
 		end
@@ -186,7 +212,7 @@ function Webhook:Execute(params: ExecuteParams, override: boolean?)
 		local posted, response =
 			pcall(HttpService.PostAsync, HttpService, self.url, encoded, Enum.HttpContentType.ApplicationJson)
 		if posted == false then
-			error("Failed to execute webhook, http service might be down.\nError message: " .. response)
+			error("Failed to execute webhook, http service might be down." .. "\nError message: " .. response)
 		end
 
 		return
@@ -194,13 +220,14 @@ function Webhook:Execute(params: ExecuteParams, override: boolean?)
 
 	local passed, reason = pcall(CheckParams, params)
 	if passed == false then
-		error("Params don't meet requirements.\nError message: " .. reason)
+		error("Params don't meet requirements." .. "\nError message: " .. reason)
 	end
 
 	local success, encoded = pcall(HttpService.JSONEncode, HttpService, params)
 	if success == false then
 		error(
-			"Failed to encode params, are you sure that your table only has string and numbers?\nError message: "
+			"Failed to encode params, are you sure that your table only has string and numbers?"
+				.. "\nError message: "
 				.. encoded
 		)
 	end
@@ -208,7 +235,7 @@ function Webhook:Execute(params: ExecuteParams, override: boolean?)
 	local posted, response =
 		pcall(HttpService.PostAsync, HttpService, self.url, encoded, Enum.HttpContentType.ApplicationJson)
 	if posted == false then
-		error("Failed to execute webhook, http service might be down.\nError message: " .. response)
+		error("Failed to execute webhook, http service might be down." .. "\nError message: " .. response)
 	end
 
 	return
@@ -227,7 +254,7 @@ function Webhook.new(webhookURL: string)
 	local succes, response = pcall(self.Update, self, webhookURL)
 
 	if succes == false then
-		error("Failed to create new webhook, \nError message: " .. response)
+		error("Failed to create new webhook, " .. "\nError message: " .. response)
 	end
 
 	return self
