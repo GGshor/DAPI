@@ -61,7 +61,7 @@ end
 
 function Utils.HextoRGB(hex: string)
 	local r, g, b = string.match(hex, "^#?(%w%w)(%w%w)(%w%w)$")
-	return Color3.fromRGB(tonumber(r, 16),tonumber(g, 16), tonumber(b, 16))
+	return Color3.fromRGB(tonumber(r, 16), tonumber(g, 16), tonumber(b, 16))
 end
 
 return Utils
