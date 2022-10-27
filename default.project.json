@@ -1,5 +1,5 @@
 {
-  "name": "DAPI",
+  "name": "RoCord",
   "tree": {
     "$className": "DataModel",
     "Lighting": {
@@ -16,7 +16,7 @@
       }
     },
     "ServerStorage": {
-      "DAPI": {
+      "RoCord": {
         "$path": "src"
       }
     },
