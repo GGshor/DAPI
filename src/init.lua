@@ -9,27 +9,45 @@ local Utils = require(script.Utils)
 local Webhook = require(script.Webhook)
 
 --[[
-    Service for all classes
+    Making it easier to send message through webhooks.
 
     @class RoCord
 ]]
 local RoCord = {}
 
-function RoCord:CreateEmbed(title: string?, description: string?, color: Color3?, url: string?, timestamp: number?)
-	return Embed.new(title, description, color, url, timestamp)
+function RoCord:AddEmbed(title: string?, description: string?, color: Color3?)
+	local embed = Embed.new(title, description, color)
+
+	table.insert(self.body.embeds, embed)
+
+	return embed
 end
 
 function RoCord:SendMessage(content: string, username: string?)
-	-- do something
+	Utils.CheckArgumentCharacters({ Utils.Limits.Content}, content)
+	self.webhook:Execute()
 end
 
-function RoCord:Init(webhookURL: string)
+function RoCord:ChangeWebhook(webhookUrl: string)
+	self.webhook:Update(webhookUrl)
+end
+
+--[[
+	Inits a new setup
+]]
+function RoCord.new(webhookURL: string)
+	local self = setmetatable({}, RoCord)
+
 	self.webhook = Webhook.new(webhookURL)
 
 	self.body = {
 		content = "",
 		username = self.webhook.name,
+		tts = false,
+		embeds = {},
 	}
+
+	return self
 end
 
 return RoCord
