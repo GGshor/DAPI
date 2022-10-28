@@ -1,3 +1,13 @@
+--[[
+	Description: Embed class, making sure that does not go over any limits
+	Author: GGshor
+	Date: 28 October, 2022
+]]
+
+
+local Utils = require(script.Parent.Utils)
+
+
 export type Embed = {
 	title: string,
 	type: string, -- Always rich
@@ -44,9 +54,9 @@ export type EmbedField = {
 	inline: boolean,
 }
 
-local Utils = require(script.Parent.Utils)
 
-local Embed = { type = "rich" }
+--[]
+local Embed = {}
 Embed.__index = Embed
 
 function Embed:AddField(name: string, value: string, inline: boolean?)
@@ -154,30 +164,40 @@ function Embed:CountCharacters()
 	return result.total, result
 end
 
+--[=[
+	Creates a new Embed.
+
+	@param title string? -- Title of embed
+	@param description string? -- The description of the embed.
+]=]
 function Embed.new(
 	title: string?,
 	description: string?,
 	color: Color3?,
 	url: string?,
-	timestamp: number?,
-	fields: { EmbedField }?
+	timestamp: DateTime?
 )
 	local self = setmetatable({}, Embed)
 
-	if
-		Utils.CheckArgumentTypes({ "string" }, title) and Utils.CheckArgumentCharacters({ Utils.Limits.Title }, title)
-	then
-		self.title = title
+	Utils.CheckArgumentTypes({ "string?", "string?", "Color3?", "string?", "DateTime?"}, title, description, color, url, timestamp)
+	Utils.CheckArgumentCharacters({ Utils.Limits.Title, Utils.Limits.Description}, title, description)
+
+	self.title = title or ""
+	self.description = description or ""
+
+	if color then
+		self.color = Utils.RGBtoHex(color)
 	end
 
-	if
-		Utils.CheckArgumentTypes({ "string" }, description)
-		and Utils.CheckArgumentCharacters({ Utils.Limits.Description }, description)
-	then
-		self.description = description
+	if timestamp then
+		self.timestamp = timestamp:ToIsoDate()
 	end
 
-	return setmetatable({}, Embed)
+	if url then
+		self.url = url
+	end
+
+	return self
 end
 
 return Embed
