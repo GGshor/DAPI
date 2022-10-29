@@ -10,10 +10,6 @@ classOrder = [
 [docusaurus]
 onBrokenLinks = "throw"
 onBrokenMarkdownLinks = "warn"
-favicon = ""
-
-[navbar]
-hideableSidebar = true
 
 [footer]
 style = "dark"
