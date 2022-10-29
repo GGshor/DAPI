@@ -64,7 +64,7 @@ function RoCord:SendMessage(content: string?, username: string?)
 		content = "",
 		username = self.webhook.name,
 		tts = false,
-		embeds = {}
+		embeds = {},
 	}
 end
 
