@@ -24,7 +24,7 @@ local Utils = {
 			["MaxFields"] = 25,
 		},
 		["Footer"] = {
-			["Text"] = 2048
+			["Text"] = 2048,
 		},
 		["Author"] = {
 			["Name"] = 256,
