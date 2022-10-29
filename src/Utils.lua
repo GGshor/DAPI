@@ -48,7 +48,7 @@ function Utils.CheckArgumentTypes(types: { string }, ...: any)
 		end
 	end
 
-	return true
+	return
 end
 
 --[=[
@@ -64,7 +64,7 @@ function Utils.CheckArgumentCharacters(limits: { number }, ...: string)
 		end
 	end
 
-	return true
+	return
 end
 
 --[=[
@@ -93,11 +93,20 @@ end
 	Transforms Color3 to Hex value
 
 	@param color Color3 -- The color3 to transform
+
+	@return string -- The new hex value
 ]=]
 function Utils.RGBtoHex(color: Color3)
 	return string.format("#%02X%02X%02X", color.R * 0xFF, color.G * 0xFF, color.B * 0xFF)
 end
 
+--[=[
+	Transforms Hex value back to Color3.
+
+	@param hex string -- The hex value to transform
+
+	@return Color3 -- The new color3 value
+]=]
 function Utils.HextoRGB(hex: string)
 	local r, g, b = string.match(hex, "^#?(%w%w)(%w%w)(%w%w)$")
 	return Color3.fromRGB(tonumber(r, 16), tonumber(g, 16), tonumber(b, 16))
