@@ -38,11 +38,14 @@ Handles webhook object
 local Webhook = {}
 Webhook.__index = Webhook
 
---[[
-Enforces the rules on given params
+--[=[
+	Enforces the rules on given params.
 
-@param params ExecuteParams -- The parameters to enforce rules on
-]]
+	@param params ExecuteParams -- The parameters to enforce rules on
+
+	@error "EmptyBody" -- You need at least content or embeds
+	@error "TooMany" -- Object has too many characters or too many embeds/fields
+]=]
 local function CheckParams(params: ExecuteParams)
 	-- Prevents content and embeds being empty
 	if typeof(params.content) == "nil" and typeof(params.embeds) == "nil" then
@@ -150,13 +153,14 @@ local function CheckParams(params: ExecuteParams)
 	end
 end
 
---[[
-Updates the webhook object and allows you to change it to a different one
+--[=[
+	Updates the webhook object and allows you to change it to a different one
 
-@param url -- The url to get information and execute from. (Needs Post and Get methods)
+	@param url -- The url to get information and execute from. (Needs Post and Get methods)
 
-@return boolean -- succesfully got information
-]]
+	@error "ResponseFailure" -- Http service might be turned off
+	@error "DecodeError" -- Was unable to run json decode from response
+]=]
 function Webhook:Update(url: string)
 	local gotResponse, response = pcall(HttpService.GetAsync, HttpService, url)
 	if gotResponse == false then
@@ -190,12 +194,19 @@ function Webhook:Update(url: string)
 		self.application_id = decoded.application_id
 	end
 
-	return true
+	return
 end
 
---[[
-Executes the webhook with given params
-]]
+--[=[
+	Executes the webhook with given params.
+
+	@param params ExecuteParams -- The table with all the parameters
+	@param override boolean? -- If you wish to override the checks
+
+	@error "EncodeError" -- Unable to json encode the params, try running it without override
+	@error "ExecuteError" -- If the post pcall failed for some reason, most likely http service
+	@error "ParamsCheckError" -- Check parameters failed
+]=]
 function Webhook:Execute(params: ExecuteParams, override: boolean?)
 	if override == true then
 		warn("[DAPI]: Executing webhook with override true, this may lead to the webhook not executing correctly.")
@@ -241,20 +252,22 @@ function Webhook:Execute(params: ExecuteParams, override: boolean?)
 	return
 end
 
---[[
-Creates a new webhook object
+--[=[
+	Creates a new webhook object
 
-@param webhookURL string -- The url that redirects to your webhook.
+	@param webhookURL string -- The url that redirects to your webhook.
 
-@return Webhook -- The created webhook class
-]]
+	@return Webhook -- The created webhook class
+
+	@error "WebhookError" -- Something went wrong while making a new webhook
+]=]
 function Webhook.new(webhookURL: string)
 	local self = setmetatable({}, Webhook)
 
 	local succes, response = pcall(self.Update, self, webhookURL)
 
 	if succes == false then
-		error("Failed to create new webhook, " .. "\nError message: " .. response)
+		error("Failed to create new webhook," .. "\nError message: " .. response)
 	end
 
 	return self
