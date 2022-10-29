@@ -30,11 +30,11 @@ export type ExecuteParams = {
 	},
 }
 
---[[
-Handles webhook object
+--[=[
+	Handles webhook object
 
-@class Webhook
-]]
+	@class Webhook
+]=]
 local Webhook = {}
 Webhook.__index = Webhook
 

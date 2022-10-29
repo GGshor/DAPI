@@ -58,6 +58,8 @@ export type EmbedField = {
 
 --[=[
 	Embeds class, allows you to easily change the embed.
+
+	@class Embed
 ]=]
 local Embed = {}
 Embed.__index = Embed
