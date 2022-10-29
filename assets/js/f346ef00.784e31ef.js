@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[417],{63891:s=>{s.exports=JSON.parse('{"sourceUrl":"https://github.com/GGshor/RoCord/blob/master","baseUrl":"/RoCord/","classOrder":["RoCord","Webhook","Embed","Utils"],"apiCategories":[]}')}}]);
