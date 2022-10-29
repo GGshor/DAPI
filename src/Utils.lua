@@ -56,6 +56,8 @@ end
 
 	@param limits {number} -- Array of limits
 	@param ... string -- Arguments
+
+	@error "Unexpected" -- When character amount is above the limits
 ]=]
 function Utils.CheckArgumentCharacters(limits: { number }, ...: string)
 	for index, argument in ipairs({ ... }) do
@@ -72,20 +74,18 @@ end
 
 	@param url string -- The url to check
 
-	@return (boolean, string) -- Succes and reason, like a pcall
+	@error "InvalidURL" -- Given url is invalid
+	@error "BadResponse" -- Got bad response from url
 ]=]
 function Utils.CheckUrl(url: string)
 	if string.find(url, "http", 1) then
 		local success, response = pcall(HttpService.GetAsync, HttpService, url)
 
-		if success then
-			return true, "Success"
-		else
-			warn("[DAPI]: Got bad response while checking url, response:", response)
-			return false, "bad response"
+		if success == false then
+			error("Got bad response from url, response: " .. tostring(response))
 		end
 	else
-		return false, "Invalid"
+		error("Given URL is invalid")
 	end
 end
 
