@@ -14,6 +14,7 @@ local HttpService = game:GetService("HttpService")
 local Utils = {
 	["Limits"] = { -- Max amount that is allowed
 		["Content"] = 2000,
+		["UserName"] = 32,
 		["Title"] = 256,
 		["Description"] = 4096,
 		["Fields"] = {
@@ -49,7 +50,6 @@ function Utils.CheckArgumentTypes(types: { string }, ...: any)
 
 	return true
 end
-
 
 --[=[
 	Checks if the arguments doesn't go over the character limit.
