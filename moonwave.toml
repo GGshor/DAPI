@@ -1,0 +1,15 @@
+gitSourceBranch = "master"
+changelog = true
+classOrder = []
+
+[docusaurus]
+onBrokenLinks = "throw"
+onBrokenMarkdownLinks = "warn"
+favicon = ""
+
+[navbar]
+hideableSidebar = true
+
+[footer]
+style = "dark"
+copyright = "Copyright © 2022 GGshor. Built with Moonwave and Docusaurus"

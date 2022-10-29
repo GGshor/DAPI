@@ -45,6 +45,8 @@ Webhook.__index = Webhook
 
 	@error "EmptyBody" -- You need at least content or embeds
 	@error "TooMany" -- Object has too many characters or too many embeds/fields
+
+	@within Webhook
 ]=]
 local function CheckParams(params: ExecuteParams)
 	-- Prevents content and embeds being empty
