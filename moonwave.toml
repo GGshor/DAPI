@@ -1,6 +1,11 @@
 gitSourceBranch = "master"
 changelog = true
-classOrder = []
+classOrder = [
+    "RoCord",
+    "Webhook",
+    "Embed",
+    "Utils"
+]
 
 [docusaurus]
 onBrokenLinks = "throw"
