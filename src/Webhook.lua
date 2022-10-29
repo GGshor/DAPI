@@ -84,10 +84,9 @@ local function CheckParams(params: ExecuteParams)
 					"Embed description has "
 						.. tostring(embed.description:len())
 						.. " characters, but the limit is up to 1024 characters"
-				)
-			else
-				stringCount += embed.description:len()
+				)				
 			end
+			stringCount += embed.description:len()
 
 			if typeof(embed.fields) == "table" then
 				local countFields = 0
@@ -125,7 +124,7 @@ local function CheckParams(params: ExecuteParams)
 						.. tostring(embed.footer.text:len())
 						.. " characters, but the limit is up to 2048 characters."
 				)
-			else
+			elseif embed.footer then
 				stringCount += embed.footer.text:len()
 			end
 
@@ -135,7 +134,7 @@ local function CheckParams(params: ExecuteParams)
 						.. tostring(embed.author.name:len())
 						.. " characters, limit is up to 256 characters"
 				)
-			else
+			elseif embed.author then
 				stringCount += embed.author.name:len()
 			end
 
