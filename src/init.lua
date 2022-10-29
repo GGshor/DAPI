@@ -14,6 +14,7 @@ local Webhook = require(script.Webhook)
     @class RoCord
 ]=]
 local RoCord = {}
+RoCord.__index = RoCord
 
 --[=[
 	Adds an embed to the message and returns the embed so that you can change it.

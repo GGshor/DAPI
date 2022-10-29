@@ -161,7 +161,6 @@ end
 	@param url -- The url to get information and execute from. (Needs Post and Get methods)
 
 	@error "ResponseFailure" -- Http service might be turned off
-	@error "DecodeError" -- Was unable to run json decode from response
 ]=]
 function Webhook:Update(url: string)
 	local gotResponse, response = pcall(HttpService.GetAsync, HttpService, url)
@@ -173,15 +172,7 @@ function Webhook:Update(url: string)
 		)
 	end
 
-	local success, decoded = HttpService:JSONDecode(response)
-	if success == false then
-		error(
-			"Failed to decode url response,  url response was: "
-				.. response
-				.. "\nError message from decode: "
-				.. decoded
-		)
-	end
+	local decoded = HttpService:JSONDecode(response)
 
 	self.url = url
 
